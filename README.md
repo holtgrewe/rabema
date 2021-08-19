@@ -58,8 +58,8 @@ We have to do the following: (1) Create a perfect mapping SAM file using RazerS 
 Note that by default rabema_prepare_sam assumes that the input SAM file is sorted by query name in the same order as produced by samtools sort -n. If your file is not sorted in this way then rabema_prepare_sam will stop with a failing sanity check. In this case, call it with the --dont-check-sorting parameter like this: ./bin/rabema_prepare_sam -i out_gold.sam --dont-check-sorting -o out_gold.prep.sam.
 
 ```
-samtools view -Sb out_gold.prep.sam >out_gold.bam
-samtools sort out_gold.bam out_gold.by_coord
+samtools view -Sb out_gold.prep.sam > out_gold.bam
+samtools sort out_gold.bam -o out_gold.by_coord.bam
 
 ./bin/rabema_build_gold_standard \
   --max-error 8 \
@@ -75,6 +75,8 @@ Next, compare the results of another read mapper against the gold standard. Here
 ./bin/razers3 -vv -o out_default.sam \
   rabema-data/data/saccharomyces/genome.fasta \
   rabema-data/data/saccharomyces/reads_454/SRR000853.10k.fastq
+samtools view -Sb out_default.sam > out_default.bam
+samtools sort -n out_default.bam -o out_default.by_name.bam
 ```
 
 Then, compare the result with the gold standard. Note that the error rate used here is independent of the one built in the standard and only has to be less than or equal to the error rate used there. Let's have a look at the output in the category all.
@@ -85,7 +87,7 @@ Then, compare the result with the gold standard. Note that the error rate used h
   --distance-metric edit \
   --benchmark-category all \
   --reference rabema-data/data/saccharomyces/genome.fasta \
-  --in-sam out_default.sam \
+  --in-bam out_default.by_name.bam \
   --in-gsi gold_standard.gsi
 ```
 
