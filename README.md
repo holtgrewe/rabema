@@ -45,6 +45,7 @@ We have to do the following: (1) Create a perfect mapping SAM file using RazerS 
 ```
 ./bin/razers3 --dont-shrink-alignments --verbose \
   --recognition-rate 100 \
+  --full-readid \
   --percent-identity 92 \
   --max-hits 10000000 \
   --output out_gold.sam \
@@ -73,6 +74,7 @@ Next, compare the results of another read mapper against the gold standard. Here
 
 ```
 ./bin/razers3 -vv -o out_default.sam \
+  --full-readid \
   rabema-data/data/saccharomyces/genome.fasta \
   rabema-data/data/saccharomyces/reads_454/SRR000853.10k.fastq
 samtools view -Sb out_default.sam > out_default.bam
